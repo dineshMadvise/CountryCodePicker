@@ -1,6 +1,7 @@
 library country_code_picker;
 
 import 'package:collection/collection.dart' show IterableExtension;
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'src/country_code.dart';
@@ -26,6 +27,7 @@ class CountryCodePicker extends StatefulWidget {
   final WidgetBuilder? emptySearchBuilder;
   final Function(CountryCode?)? builder;
   final bool enabled;
+  final bool isBottomSheetView;
   final TextOverflow textOverflow;
   final Icon closeIcon;
 
@@ -114,6 +116,7 @@ class CountryCodePicker extends StatefulWidget {
     this.builder,
     this.flagWidth = 32.0,
     this.enabled = true,
+    this.isBottomSheetView = false,
     this.textOverflow = TextOverflow.ellipsis,
     this.barrierColor,
     this.backgroundColor,
@@ -127,7 +130,8 @@ class CountryCodePicker extends StatefulWidget {
     this.dialogBackgroundColor,
     this.closeIcon = const Icon(Icons.close),
     this.countryList = codes,
-    this.dialogItemPadding = const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+    this.dialogItemPadding =
+        const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
     this.searchPadding = const EdgeInsets.symmetric(horizontal: 24),
     Key? key,
   }) : super(key: key);
@@ -171,12 +175,19 @@ class CountryCodePickerState extends State<CountryCodePicker> {
     Widget internalWidget;
     if (widget.builder != null) {
       internalWidget = InkWell(
-        onTap: widget.enabled ? showCountryCodePickerDialog : null,
+        onTap: widget.enabled
+            ? widget.isBottomSheetView
+                ? showCountryCodePickerBottomSheet
+                : showCountryCodePickerDialog
+            : null,
         child: widget.builder!(selectedItem),
       );
     } else {
       internalWidget = TextButton(
-        onPressed: widget.enabled ? showCountryCodePickerDialog : null,
+        onPressed: widget.enabled ? widget.isBottomSheetView
+            ? showCountryCodePickerBottomSheet
+            : showCountryCodePickerDialog
+            : null,
         child: Padding(
           padding: widget.padding,
           child: Flex(
@@ -292,6 +303,35 @@ class CountryCodePickerState extends State<CountryCodePicker> {
                 item.name!.toUpperCase() == criteria.toUpperCase()) !=
             null)
         .toList();
+  }
+
+  void showCountryCodePickerBottomSheet() async {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return SelectionDialog2(
+          elements,
+          favoriteElements,
+          showCountryOnly: widget.showCountryOnly,
+          emptySearchBuilder: widget.emptySearchBuilder,
+          searchDecoration: widget.searchDecoration,
+          searchStyle: widget.searchStyle,
+          textStyle: widget.dialogTextStyle,
+          boxDecoration: widget.boxDecoration,
+          showFlag: widget.showFlagDialog ?? widget.showFlag,
+          flagWidth: widget.flagWidth,
+          size: widget.dialogSize,
+          backgroundColor: widget.dialogBackgroundColor,
+          barrierColor: widget.barrierColor,
+          hideSearch: widget.hideSearch,
+          hideCloseIcon: widget.hideCloseIcon,
+          closeIcon: widget.closeIcon,
+          flagDecoration: widget.flagDecoration,
+          dialogItemPadding: widget.dialogItemPadding,
+          searchPadding: widget.searchPadding,
+        );
+      },
+    );
   }
 
   void showCountryCodePickerDialog() async {

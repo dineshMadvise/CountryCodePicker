@@ -2,10 +2,11 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-void main() => runApp(const MyApp());
+void main() => runApp( MyApp());
 
 class MyApp extends StatefulWidget {
-  const MyApp({Key key}) : super(key: key);
+  const MyApp({Key? key}) : super(key: key);
+
 
   @override
   MyAppState createState() => MyAppState();
@@ -126,16 +127,45 @@ class MyAppState extends State<MyApp> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               CountryCodePicker(
+                flagWidth: 27,
+                // countryFilter: Helper.countries,
+                flagDecoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                onChanged: (val) {
+
+                },
+                // Initial selection and favorite can be one of code ('IT') OR dial_code('+39')
+                initialSelection: 'IN',
+                favorite: const ['+91', 'IN'],
+                // optional. Shows only country name and flag
+                showCountryOnly: false,
+                // optional. Shows only country name and flag when popup is closed.
+                showOnlyCountryWhenClosed: false,
+                // optional. aligns the flag and the Text left
+                alignLeft: false,
+                isBottomSheetView: true,
+                padding: EdgeInsets.symmetric(
+                  horizontal: 5,
+                ),
+                textStyle: TextStyle(
+                  // color: AppColors.primaryTextColor,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w300,
+                ),
+              ),
+
+              CountryCodePicker(
                 onChanged: print,
                 // Initial selection and favorite can be one of code ('IT') OR dial_code('+39')
                 initialSelection: 'IT',
                 favorite: const ['+39', 'FR'],
                 countryFilter: const ['IT', 'FR'],
                 showFlagDialog: false,
-                comparator: (a, b) => b.name.compareTo(a.name),
+                // comparator: (a, b) => b.name.compareTo(a.name),
                 //Get the country information relevant to the initial selection
-                onInit: (code) => debugPrint(
-                    "on init ${code.name} ${code.dialCode} ${code.name}"),
+                // onInit: (code) => debugPrint(
+                //     "on init ${code.name} ${code.dialCode} ${code.name}"),
               ),
               CountryCodePicker(
                 onChanged: print,

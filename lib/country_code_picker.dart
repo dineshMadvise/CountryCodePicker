@@ -28,6 +28,7 @@ class CountryCodePicker extends StatefulWidget {
   final Function(CountryCode?)? builder;
   final bool enabled;
   final bool isBottomSheetView;
+  final num bottomSheetViewRadius;
   final TextOverflow textOverflow;
   final Icon closeIcon;
 
@@ -117,6 +118,7 @@ class CountryCodePicker extends StatefulWidget {
     this.flagWidth = 32.0,
     this.enabled = true,
     this.isBottomSheetView = false,
+    this.bottomSheetViewRadius = 10,
     this.textOverflow = TextOverflow.ellipsis,
     this.barrierColor,
     this.backgroundColor,
@@ -184,9 +186,10 @@ class CountryCodePickerState extends State<CountryCodePicker> {
       );
     } else {
       internalWidget = TextButton(
-        onPressed: widget.enabled ? widget.isBottomSheetView
-            ? showCountryCodePickerBottomSheet
-            : showCountryCodePickerDialog
+        onPressed: widget.enabled
+            ? widget.isBottomSheetView
+                ? showCountryCodePickerBottomSheet
+                : showCountryCodePickerDialog
             : null,
         child: Padding(
           padding: widget.padding,
@@ -308,6 +311,9 @@ class CountryCodePickerState extends State<CountryCodePicker> {
   void showCountryCodePickerBottomSheet() async {
     showModalBottomSheet(
       context: context,
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+              top: Radius.circular(widget.bottomSheetViewRadius.toDouble()))),
       builder: (context) {
         return SelectionDialog2(
           elements,

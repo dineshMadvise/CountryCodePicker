@@ -132,6 +132,7 @@ class MyAppState extends State<MyApp> {
                 flagDecoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(5),
                 ),
+              bottomSheetViewRadius:20,
                 onChanged: (val) {
 
                 },

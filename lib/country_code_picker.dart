@@ -309,7 +309,7 @@ class CountryCodePickerState extends State<CountryCodePicker> {
   }
 
   void showCountryCodePickerBottomSheet() async {
-    showModalBottomSheet(
+    final item = await showModalBottomSheet(
       context: context,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
@@ -338,6 +338,13 @@ class CountryCodePickerState extends State<CountryCodePicker> {
         );
       },
     );
+
+    if (item != null) {
+      setState(() {
+        selectedItem = item;
+      });
+      _publishSelection(item);
+    }
   }
 
   void showCountryCodePickerDialog() async {
